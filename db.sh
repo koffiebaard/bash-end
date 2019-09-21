@@ -6,7 +6,7 @@ curdir="$(dirname "$0")"
 
 source "$curdir/internals.sh"
 
-db_response=$(mysql -u $(setting "username") -p"$(setting 'password')" -e "$db_query" consolia --batch 2>&1 | grep -v "Warning");
+db_response=$(mysql -h "$(setting 'db_host')" -u $(setting "db_username") -p"$(setting 'db_password')" -e "$db_query" consolia --batch 2>&1 | grep -v "Warning");
 
 read_column_names=1;
 array_of_results='[]';

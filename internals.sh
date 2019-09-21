@@ -339,6 +339,10 @@ build_where_query () {
   	} <<<"$fields"
 }
 
+if [ "$CONTENT_LENGTH" -gt 0 ]; then
+	read -n $CONTENT_LENGTH POST_DATA <&0
+	body="$POST_DATA";
+fi
 
 # get all necessary data from environment variables (fastcgi)
 uri=$(get_uri);
@@ -359,17 +363,3 @@ do
     declare get_$query_field=$query_value;
     query_string_object=$(echo "$query_string_object" | jq --arg value "$query_value" ". + {$query_field: \$value}");
 done
-
-
-if [[ $request_method == "POST" || $request_method == "PUT" ]]; then
-
-	body="";
-
-	while read -t 1 line
-	do
-		if [[ "$line" == "" ]]; then
-			break;
-		fi
-	  	body+="$line";
-	done < /dev/stdin
-fi
