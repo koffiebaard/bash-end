@@ -45,6 +45,7 @@ function controller_comic_update () {
 	id=$(get_id_from_uri $uri);
 
 	if is_int $id && ! empty $(model_comic_get_by_id $id); then
+
 		result=$(model_comic_update "$id" "$body");
 
 		# update has nothing to report? success!
@@ -54,8 +55,6 @@ function controller_comic_update () {
 
 		# existence of error property strongly hints at an error
 		elif valid_json "$result" && [[ $(o_o "$result" "error") != "" ]]; then
-			echo 'wtfyo';
-			echo $(o_o "$result" "error");
 			send_response 400 "$result";
 
 		# we should get either of the above. so it's a 500.
@@ -72,6 +71,7 @@ function controller_comic_delete () {
 	id=$(get_id_from_uri $uri);
 
 	if is_int $id && ! empty $(model_comic_get_by_id $id); then
+
 		result=$(model_comic_delete_by_id "$id");
 
 		# delete has nothing to report? success!
@@ -80,8 +80,6 @@ function controller_comic_delete () {
 
 		# existence of error property strongly hints at an error
 		elif valid_json "$result" && [[ $(o_o "$result" "error") != "" ]]; then
-			echo 'wtfyo';
-			echo $(o_o "$result" "error");
 			send_response 400 "$result";
 
 		# we should get either of the above. so it's a 500.

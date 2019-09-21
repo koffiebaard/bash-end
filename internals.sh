@@ -247,7 +247,7 @@ function validate_fields_in_json () {
   	} <<<"$fields_as_csv"
 }
 
-function empty () {
+empty () {
 
 	if [[ $1 == "" || $1 == "null" ]]; then
 		true;
