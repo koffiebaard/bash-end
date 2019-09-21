@@ -14,10 +14,9 @@ while IFS=$'\t' read -r -a values
 do 
 
     if [[ $read_column_names == 1 ]]; then
-	
-	columns=("${values[@]}")
-	read_column_names=0;
-	continue;
+		columns=("${values[@]}")
+		read_column_names=0;
+		continue;
     fi
 
     jq_args=( )
@@ -27,7 +26,6 @@ do
 	
 	column=${columns[$key]};
 	value=${values[$key]};
-	#echo column is $column and value is $value 
 
 	jq_args+=( --arg "column$column"   "$column"   )
 	jq_args+=( --arg "value$column" "$value" )
@@ -56,5 +54,8 @@ do
 
 done <<< "$db_response"
 
-echo $array_of_results;
-
+if [[ $db_response == *"ERROR"* ]]; then
+	echo "{\"db_error\": \"$db_response\"}";
+else
+	echo $array_of_results;
+fi

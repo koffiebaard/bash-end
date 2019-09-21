@@ -205,6 +205,19 @@ function validate_fields_in_json () {
 				    		echo "- $field must be valid to this regex: $validate_regex";
 			    	fi
 
+			    	#value must validate to be a datetime
+			    	if ! empty $(o_o "$field_validation" "datetime") && [[ ! $value =~ ^[0-9]{4}\-[0-9]{2}\-[0-9]{2}[[:space:]][0-9]{2}:[0-9]{2}:[0-9]{2}$ ]]; then
+				    		echo "- $field must be a valid datetime, the format is: yyyy-mm-dd hh:mm:ss";
+			    	else
+			    		validate_year=$(echo "2019-12-20 12:30:00" | awk '{print $1}' | awk -F  "-" '/1/ {print $1}');
+			    		validate_month=$(echo "2019-12-20 12:30:00" | awk '{print $1}' | awk -F  "-" '/1/ {print $2}');
+			    		validate_day=$(echo "2019-12-20 12:30:00" | awk '{print $1}' | awk -F  "-" '/1/ {print $3}');
+
+			    		validate_hour=$(echo "2019-12-20 12:30:00" | awk '{print $2}' | awk -F  ":" '/1/ {print $3}');
+			    		validate_min=$(echo "2019-12-20 12:30:00" | awk '{print $2}' | awk -F  ":" '/1/ {print $3}');
+			    		validate_sec=$(echo "2019-12-20 12:30:00" | awk '{print $2}' | awk -F  ":" '/1/ {print $3}');
+			    	fi
+
 			    	# must be int
 			    	if [[ $(o_o "$field_validation" "integer") == "true" ]] && ! is_int $value; then
 			    		echo "- $field must be an integer";
