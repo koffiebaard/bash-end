@@ -113,3 +113,41 @@ function model_comic_create () {
 	select LAST_INSERT_ID() as 'id';
 	";
 }
+
+function model_comic_update () {
+
+	id=$1;
+	data=$2;
+
+	fields=$(get_fields_from_json "$data");
+
+	validation_errors=$(validate_fields_in_json "$fields" "$data");
+
+	if [[ $validation_errors != "" ]]; then
+		echo "{\"error\": \"Validation failed\", \"message\": \"$validation_errors\"}"
+		exit 1
+	fi
+
+	local update_query=$(build_update_query "$data" "$fields");
+
+	$curdir/db.sh selectOne "
+	update comics 
+		set 
+			$update_query
+		where
+			id = $(int $id)
+	;
+	";
+}
+
+function model_comic_delete_by_id () {
+	id=$1;
+
+	$curdir/db.sh selectOne "
+	delete
+		from
+			comics
+		where
+			id = $(int $id);
+	";
+}

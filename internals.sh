@@ -150,18 +150,19 @@ send_200 () {
 }
 
 send_404 () {
-	message=$1;
+	local message=$1;
     send_response 404 "{\"error\": \"$message\"}";
 }
 
 send_error () {
-	message=$1;
-    send_response 500 "{\"error\": \"$message\"}";
+	local resp_status_code=$1;
+	local message=$2;
+    send_response $resp_status_code "{\"error\": \"$message\"}";
 }
 
 send_response () {
-	resp_status_code=$1;
-	payload=$2
+	local resp_status_code=$1;
+	local payload=$2
 
 	echo "Content-type: application/json"
     echo -e "Status: $resp_status_code\n";
@@ -173,6 +174,11 @@ send_response () {
 function validate_fields_in_json () {
 	fields_as_csv=$1;
 	json=$2;
+
+	if ! valid_json "$json"; then
+		echo "- supplied body is not valid JSON";
+		exit 1
+	fi
 
 	{
 		while IFS=',' read -r -a values; do
@@ -261,6 +267,38 @@ o_o () {
 	echo "$1" | jq -j ".$2";
 }
 
+get_fields_from_json () {
+	local supplied_json=$1;
+
+	if valid_json "$supplied_json"; then
+		echo "$data" | jq '. | to_entries[] | .key' | tr '\n' ',' | sed 's/"//g' | sed 's/,$//g';
+	fi
+}
+
+
+build_update_query () {
+	local data=$1
+	local fields=$2
+
+	motherfucking_first_yall=1;
+	{
+		while IFS=',' read -r -a values; do
+
+			for key in "${!values[@]}"; do
+
+		    	local field=${values[$key]};
+		    	local value=$(o_o "$data" "$field");
+
+		    	if [[ $motherfucking_first_yall == 1 ]]; then
+		    		motherfucking_first_yall=0;
+		    		echo "$(sanitize "$field") = \"$(sanitize "$value")\"";
+		    	else
+		    		echo ",$(sanitize "$field") = \"$(sanitize "$value")\"";
+		    	fi
+		    done
+		done
+  	} <<<"$fields"
+}
 
 # get all necessary data from environment variables (fastcgi)
 uri=$(get_uri);

@@ -2,7 +2,7 @@
 
 source "$curdir/model/comic.sh"
 
-function comic_controller_get () {
+function controller_comic_get () {
 
 	id=$(get_id_from_uri $uri);
 	comic=$(model_comic_get_by_id $id);
@@ -14,14 +14,14 @@ function comic_controller_get () {
 	fi
 }
 
-function comic_controller_list () {
+function controller_comic_list () {
 
 	list_of_comics=$(model_comic_list "$get_search" "$get_limit");
 
 	send_200 "$list_of_comics";
 }
 
-function comic_controller_create () {
+function controller_comic_create () {
 
 	result=$(model_comic_create "$body");
 
@@ -40,8 +40,55 @@ function comic_controller_create () {
 	fi
 }
 
-function comic_controller_update () {
+function controller_comic_update () {
 
 	id=$(get_id_from_uri $uri);
-	send_404 "PUT is not implemented yet"
+
+	if is_int $id && ! empty $(model_comic_get_by_id $id); then
+		result=$(model_comic_update "$id" "$body");
+
+		# update has nothing to report? success!
+		if [[ "$result" == "" ]]; then
+			comic=$(model_comic_get_by_id $id);
+			send_200 "$comic";
+
+		# existence of error property strongly hints at an error
+		elif valid_json "$result" && [[ $(o_o "$result" "error") != "" ]]; then
+			echo 'wtfyo';
+			echo $(o_o "$result" "error");
+			send_response 400 "$result";
+
+		# we should get either of the above. so it's a 500.
+		else
+			send_error 500 "$result";
+		fi
+	else
+		send_404 "ID doesn't exist."
+	fi
+}
+
+function controller_comic_delete () {
+
+	id=$(get_id_from_uri $uri);
+
+	if is_int $id && ! empty $(model_comic_get_by_id $id); then
+		result=$(model_comic_delete_by_id "$id");
+
+		# delete has nothing to report? success!
+		if [[ "$result" == "" ]]; then
+			send_response 200 "{\"message\": \"Comic #$id is deleted\"}"
+
+		# existence of error property strongly hints at an error
+		elif valid_json "$result" && [[ $(o_o "$result" "error") != "" ]]; then
+			echo 'wtfyo';
+			echo $(o_o "$result" "error");
+			send_response 400 "$result";
+
+		# we should get either of the above. so it's a 500.
+		else
+			send_error 500 "$result";
+		fi
+	else
+		send_404 "ID doesn't exist."
+	fi
 }
