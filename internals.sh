@@ -259,7 +259,7 @@ function empty () {
 o_o () {
 
 	if ! valid_json "$1"; then
-		echo "Error: validation object is not valid json";
+		echo "Error: supplied object is not valid json";
 		echo "$1";
 		exit 1
 	fi
@@ -300,6 +300,46 @@ build_update_query () {
   	} <<<"$fields"
 }
 
+build_where_query () {
+	local fields=$1
+	local data=$2
+	local search_config=$3
+
+	motherfucking_first_yall=1;
+	{
+		while IFS=',' read -r -a values; do
+
+			for key in "${!values[@]}"; do
+
+		    	local field=${values[$key]};
+		    	local value=$(o_o "$data" "$field");
+
+		    	if empty "$value"; then
+		    		continue;
+		    	fi
+
+		    	if [[ $motherfucking_first_yall == 1 ]]; then
+		    		motherfucking_first_yall=0;
+		    		echo "where ";
+		    	else
+		    		echo "and ";
+		    	fi
+
+		    	# is the current field a search field?
+		    	if ! empty $(o_o "$search_config" "$field"); then
+
+		    		local filter_field=$(o_o "$search_config" "$field");
+		    		echo "$(sanitize "$filter_field") like \"%$(sanitize "$value")%\"";
+		    	# if no, carry on
+		    	else
+		    		echo "$(sanitize "$field") = \"$(sanitize "$value")\"";
+		    	fi
+		    done
+		done
+  	} <<<"$fields"
+}
+
+
 # get all necessary data from environment variables (fastcgi)
 uri=$(get_uri);
 query=$(printenv "QUERY_STRING");
@@ -309,11 +349,17 @@ currentIFS=$IFS
 IFS='=&'
 args=($query)
 IFS=$currentIFS
+query_string_object="{}"
 
 for ((i=0; i<${#args[@]}; i+=2))
 do
-    declare get_${args[i]}=${args[i+1]}
+	query_field=${args[i]};
+	query_value=${args[i+1]};
+
+    declare get_$query_field=$query_value;
+    query_string_object=$(echo "$query_string_object" | jq --arg value "$query_value" ". + {$query_field: \$value}");
 done
+
 
 if [[ $request_method == "POST" || $request_method == "PUT" ]]; then
 

@@ -42,6 +42,13 @@ read -r -d '' validation_rules <<'EOF'
 }
 EOF
 
+read -r -d '' search_config <<'EOF'
+{
+	"search": "title"
+}
+EOF
+
+
 function model_comic_get_by_id () {
 	id=$1;
 
@@ -69,15 +76,25 @@ function model_comic_list () {
 	db_search=$1;
 	db_limit=$2;
 
-	if [[ "$db_search" != "" ]]; then
-		list_of_comics=$($curdir/db.sh selectAll "select id, title, slug, image, posted_on from comics where title like \"%$(sanitize $db_search)%\" order by id desc limit $(int $db_limit 10);" | jq '.');
-	else
-		list_of_comics=$($curdir/db.sh selectAll "select id, title, slug, image, posted_on from comics order by id desc limit $(int $db_limit 10);" | jq '.');
-	fi
+	local where_query=$(build_where_query "search,slug,id,enabled" "$query_string_object" "$search_config");
 
-	echo "$list_of_comics";
+	$curdir/db.sh selectAll "
+		select
+			 id
+			,title
+			,slug
+			,image
+			,posted_on 
+		from 
+			comics
+		
+		$where_query
+
+		order by 
+			id desc 
+		limit $(int $db_limit 10)
+	;" | jq '.';
 }
-
 
 function model_comic_create () {
 	data=$1;
