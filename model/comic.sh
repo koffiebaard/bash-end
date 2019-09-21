@@ -45,7 +45,7 @@ EOF
 function model_comic_get_by_id () {
 	id=$1;
 
-	comic=$($curdir/db.sh "
+	comic=$($curdir/db.sh selectOne "
 		select
 			 id
 			,title
@@ -60,7 +60,7 @@ function model_comic_get_by_id () {
 			comics
 		where
 			id = $(int $id);
-	" | jq '.[]');
+	");
 
 	echo $comic;
 }
@@ -70,9 +70,9 @@ function model_comic_list () {
 	db_limit=$2;
 
 	if [[ "$db_search" != "" ]]; then
-		list_of_comics=$($curdir/db.sh "select id, title, slug, image, posted_on from comics where title like \"%$(sanitize $db_search)%\" order by id desc limit $(int $db_limit 10);" | jq '.');
+		list_of_comics=$($curdir/db.sh selectAll "select id, title, slug, image, posted_on from comics where title like \"%$(sanitize $db_search)%\" order by id desc limit $(int $db_limit 10);" | jq '.');
 	else
-		list_of_comics=$($curdir/db.sh "select id, title, slug, image, posted_on from comics order by id desc limit $(int $db_limit 10);" | jq '.');
+		list_of_comics=$($curdir/db.sh selectAll "select id, title, slug, image, posted_on from comics order by id desc limit $(int $db_limit 10);" | jq '.');
 	fi
 
 	echo "$list_of_comics";
@@ -89,9 +89,7 @@ function model_comic_create () {
 		exit 1
 	fi
 
-	echo "lets create a comic!";
-	
-	$curdir/db.sh "
+	$curdir/db.sh selectOne "
 	insert into comics (
 		 title
 		,slug

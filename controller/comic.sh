@@ -25,10 +25,18 @@ function comic_controller_create () {
 
 	result=$(model_comic_create "$body");
 
-	if [[ $? == 0 ]]; then
-		send_response 200 "$result";
-	else
+	# is there a valid ID? everything went well
+	if [[ $(o_o "$result" "id") != "" ]] && is_int $(o_o "$result" "id"); then
+		comic=$(model_comic_get_by_id $(o_o "$result" "id"));
+		send_200 "$comic";
+
+	# error property? something went wrong on the db side
+	elif [[ $(o_o "$result" "error") != "" ]]; then
 		send_response 400 "$result";
+
+	# we should get either of the above. so it's a 500.
+	else
+		send_error 500 "Error: something went wrong. There's no ID and no error from the database.";
 	fi
 }
 

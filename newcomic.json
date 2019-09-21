@@ -1,0 +1,10 @@
+{
+	"title": "New Comic", 
+	"slug": "super-new-comic-arrrr-whoopppp", 
+	"image": "test.png", 
+	"comic_width": 625, 
+	"comic_height": 110, 
+	"tooltip": "Well then, i guess 'cake' is sort of 'delicious' but not really. Or is it?", 
+	"sublog": "So here's where we'd put some big piece of text about the comic, or some stupid joke or smth", 
+	"posted_on": "2019-12-20 12:30:00"
+}

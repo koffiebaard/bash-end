@@ -151,9 +151,12 @@ send_200 () {
 
 send_404 () {
 	message=$1;
-	echo "Content-type: application/json"
-    echo -e "Status: 404\n";
-    echo "{\"error\": \"$message\"}";
+    send_response 404 "{\"error\": \"$message\"}";
+}
+
+send_error () {
+	message=$1;
+    send_response 500 "{\"error\": \"$message\"}";
 }
 
 send_response () {

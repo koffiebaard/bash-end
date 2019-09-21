@@ -1,6 +1,7 @@
 #!/bin/bash
 
-db_query="$1"
+selection="$1"
+db_query="$2"
 curdir="$(dirname "$0")"
 
 source "$curdir/internals.sh"
@@ -55,7 +56,11 @@ do
 done <<< "$db_response"
 
 if [[ $db_response == *"ERROR"* ]]; then
-	echo "{\"db_error\": \"$db_response\"}";
+	echo "{\"error\": \"$db_response\"}";
 else
-	echo $array_of_results;
+	if [[ $selection == "selectOne" ]]; then
+		echo $array_of_results | jq '.[]';
+	else
+		echo $array_of_results;
+	fi
 fi
