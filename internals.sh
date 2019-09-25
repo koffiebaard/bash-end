@@ -339,7 +339,7 @@ build_where_query () {
   	} <<<"$fields"
 }
 
-if [ "$CONTENT_LENGTH" -gt 0 ]; then
+if [[ "$CONTENT_LENGTH" -gt 0 ]]; then
 	read -n $CONTENT_LENGTH POST_DATA <&0
 	body="$POST_DATA";
 fi
