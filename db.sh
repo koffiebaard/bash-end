@@ -12,7 +12,7 @@ read_column_names=1;
 array_of_results='[]';
 
 while IFS=$'\t' read -r -a values
-do 
+do
 
     if [[ $read_column_names == 1 ]]; then
 		columns=("${values[@]}")

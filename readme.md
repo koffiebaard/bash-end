@@ -1,4 +1,4 @@
-[![Bash-end](http://quax.net/bash-end/motherfucking-logo-woot.png)](http://quax.net/bash-end)
+[![Bash-end](https://static.consolia-comic.com/bash-end-underline.png)](http://quax.net/bash-end)
 
   Fast, unopinionated, minimalist API framework written solely in Bash.
 
@@ -8,13 +8,13 @@ curdir="$(dirname "$0")"
 source "$curdir/internals.sh"
 source "$curdir/controller/comic.sh"
 
-add_route "GET"   /comic/[0-9]+$    "controller_comic_get"
-add_route "GET"   /comic        "controller_comic_list"
-add_route "POST"  /comic        "controller_comic_create"
-add_route "PUT"   /comic/[0-9]+$    "controller_comic_update"
+add_route "GET"     /comic/[0-9]+$    "controller_comic_get"
+add_route "GET"     /comic            "controller_comic_list"
+add_route "POST"    /comic            "controller_comic_create"
+add_route "PUT"     /comic/[0-9]+$    "controller_comic_update"
 add_route "DELETE"  /comic/[0-9]+$    "controller_comic_delete"
 
-add_404_route               "default_404"
+add_404_route                         "default_404"
 ```
 
 ## Features
@@ -30,18 +30,20 @@ add_404_route               "default_404"
 
 The framework itself is just a few bash scripts. You can easily tie it into a webserver using *fastcgi*.
 
-There is one dependency: *jq*. So just get the files from the repo. Like so:
+There is one dependency: *jq*. So we just install it and get Bash-end from the repo. Like so:
 
 ```bash
 $ git clone https://github.com/koffiebaard/bash-end/
 $ apt install jq
 ```
 
+
 If you want to use mysql, you also need *mysql-client*:
 
 ```bash
 $ apt install mysql-client
 ```
+
 
 Note: there's a *config.yaml* file in the root, it mostly governs your db connection. An example file:
 
