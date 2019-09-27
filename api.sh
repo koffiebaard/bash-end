@@ -2,7 +2,7 @@
 
 curdir="$(dirname "$0")"
 
-source "$curdir/internals.sh"
+source "$curdir/lib/internals.sh"
 source "$curdir/controller/comic.sh"
 
 

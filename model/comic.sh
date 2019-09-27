@@ -52,7 +52,7 @@ EOF
 function model_comic_get_by_id () {
 	id=$1;
 
-	comic=$($curdir/db.sh selectOne "
+	comic=$($curdir/lib/mysql.sh selectOne "
 		select
 			 id
 			,title
@@ -78,7 +78,7 @@ function model_comic_list () {
 
 	local where_query=$(build_where_query "search,slug,id,enabled" "$query_string_object" "$search_config");
 
-	$curdir/db.sh selectAll "
+	$curdir/lib/mysql.sh selectAll "
 		select
 			 id
 			,title
@@ -106,7 +106,7 @@ function model_comic_create () {
 		exit 1
 	fi
 
-	$curdir/db.sh selectOne "
+	$curdir/lib/mysql.sh selectOne "
 	insert into comics (
 		 title
 		,slug
@@ -147,7 +147,7 @@ function model_comic_update () {
 
 	local update_query=$(build_update_query "$data" "$fields");
 
-	$curdir/db.sh selectOne "
+	$curdir/lib/mysql.sh selectOne "
 	update comics 
 		set 
 			$update_query
@@ -160,7 +160,7 @@ function model_comic_update () {
 function model_comic_delete_by_id () {
 	id=$1;
 
-	$curdir/db.sh selectOne "
+	$curdir/lib/mysql.sh selectOne "
 	delete
 		from
 			comics

@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-setting_file="config.yaml"
+setting_file="conf/config.yaml"
 
 setting () {
 	key="$1"
@@ -304,8 +304,8 @@ build_where_query () {
 	local fields=$1
 	local data=$2
 	local search_config=$3
-
 	motherfucking_first_yall=1;
+
 	{
 		while IFS=',' read -r -a values; do
 

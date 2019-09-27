@@ -10,7 +10,7 @@ RUN wget -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/
 RUN chmod +x /usr/bin/jq
 
 # nginx config
-COPY nginx-bash-end.conf /etc/nginx/sites-enabled/
+COPY conf/nginx-bash-end.conf /etc/nginx/sites-enabled/
 
 # rights for the fcgi socket
 RUN chmod 777 /run
@@ -20,7 +20,7 @@ RUN /etc/init.d/nginx reload
 COPY . /var/www/
 
 # change the db_host to connect to the host (instead of localhost on the docker container)
-RUN sed -i 's/^db_host.*$/db_host: host.docker.internal/' /var/www/config.yaml
+RUN sed -i 's/^db_host.*$/db_host: host.docker.internal/' /var/www/conf/config.yaml
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
