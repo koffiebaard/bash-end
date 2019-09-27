@@ -14,7 +14,7 @@ setting () {
 
 # cast to int, with an option to return default value
 int () {
-	attempt_to_cast=$(echo $1 | sed 's/^\([0-9\.]\+\).*/\1/g' | sed 's/\.$//g');
+	attempt_to_cast=$(echo $1 | sed 's/^\([0-9]\{1,\}\).*/\1/g' | sed 's/\.$//g');
 	default_value=$2;
 
 	if [[ "$attempt_to_cast" =~ ^[0-9]+$ ]]; then
