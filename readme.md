@@ -47,6 +47,8 @@ $ apt install mysql-client
 
 You can run the whole thing with nginx and fcgiwrap, or whichever other flavors you prefer.
 
+[Read more about setting up Bash-end](docs/setup.md)
+[Reference docs](docs/ref.md)
 
 ## Database
 
@@ -54,6 +56,7 @@ lib/mysql.sh is the database connection handler. As input it accepts a query, an
 
 ```bash
 db_host: localhost                      # host for the database
+db_name: testdb                         # database name
 db_username: supersecret                # username for the database
 db_password: alsosecretbutpredictable   # password for the database
 basedir: bash-end                       # if the API is under a basedir, list it here
