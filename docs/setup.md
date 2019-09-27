@@ -1,6 +1,10 @@
 [![Bash-end](https://static.consolia-comic.com/bash-end-underline.png)](http://quax.net/bash-end)
 
+
+## Setup docs
+
 This is the setup docs. You can read this, the [reference docs](ref.md) or [go home](../readme.md).
+
 
 ## Features
 

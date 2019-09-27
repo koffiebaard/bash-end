@@ -48,6 +48,7 @@ $ apt install mysql-client
 You can run the whole thing with nginx and fcgiwrap, or whichever other flavors you prefer.
 
 [Read more about setting up Bash-end](docs/setup.md)
+
 [Reference docs](docs/ref.md)
 
 ## Database
