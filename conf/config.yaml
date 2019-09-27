@@ -1,4 +1,5 @@
 db_host: localhost                 # host for the database
+db_name:                           # database name
 db_username:                       # username for the database
 db_password:                       # password for the database
 basedir:                           # if the API is under a basedir, list it here
