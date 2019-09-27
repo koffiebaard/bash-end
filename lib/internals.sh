@@ -92,6 +92,9 @@ get_uri () {
 	if [[ $(setting "basedir") != "" ]]; then
 		uri=$(printenv "DOCUMENT_URI" | sed "s/\/$(setting 'basedir')//g" | sed "s/\/$//g");
 		echo $uri;
+	else
+		uri=$(printenv "DOCUMENT_URI" | sed "s/\/$//g");
+		echo $uri;
 	fi
 }
 
