@@ -2,7 +2,7 @@
 
   Fast, unopinionated, minimalist API framework written solely in Bash.
 
-[Setup docs](conf/setup.md), [Reference docs](docs/ref.md).
+[Setup docs](docs/setup.md), [Reference docs](docs/ref.md).
 
 
 The entry script looks this:
