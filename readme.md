@@ -2,6 +2,11 @@
 
   Fast, unopinionated, minimalist API framework written solely in Bash.
 
+[Setup docs](conf/setup.md), [Reference docs](docs/ref.md).
+
+
+The entry script looks this:
+
 ```bash
 curdir="$(dirname "$0")"
 
