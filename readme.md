@@ -26,6 +26,7 @@ add_404_route                         "default_404"
   * Decent test coverage
   * Out of the box MySQL support
 
+
 ## Quick Start
 
 The framework itself is just a few bash scripts. You can easily tie it into a webserver using *fastcgi*.
@@ -44,8 +45,12 @@ If you want to use mysql, you also need *mysql-client*:
 $ apt install mysql-client
 ```
 
+You can run the whole thing with nginx and fcgiwrap, or whichever other flavors you prefer.
 
-Note: there's a *config.yaml* file in the root, it mostly governs your db connection. An example file:
+
+## Database
+
+lib/mysql.sh is the database connection handler. As input it accepts a query, and it returns json as output. There's a *config.yaml* file in the conf folder that contains your db connection info. An example file:
 
 ```bash
 db_host: localhost                      # host for the database
@@ -54,7 +59,21 @@ db_password: alsosecretbutpredictable   # password for the database
 basedir: bash-end                       # if the API is under a basedir, list it here
 ```
 
-You can run the whole thing with nginx and fcgiwrap, or whichever other flavors you prefer.
+You can query like this:
+
+```bash
+$curdir/lib/mysql.sh selectAll "
+    select
+       id
+      ,title
+      ,slug
+      ,image
+      ,posted_on 
+    from 
+      comics
+    limit 10
+    ;"
+```
 
 ## Docker
 
@@ -67,6 +86,7 @@ $ docker run --name=bash-end-container -d -p 6969:6969 bash-end
 ```
 
 You can now view the API at: *http://localhost:6969*.
+
 
 ## Philosophy
 
@@ -81,15 +101,8 @@ You can now view the API at: *http://localhost:6969*.
 
 ## Examples
 
-  The best example is the API built for the [webcomic Consolia](https://github.com/koffiebaard/consolia-api-bash).
+  The best example is the API built for the webcomic Consolia. That example is currently in the repo itself. The controller and model, as well as the routing in api.sh, are doing CRUD for comics in MySQL.
 
-## Tests
-
-  To run the tests, simply run `test.sh`.
-
-```bash
-$ ./test.sh
-```
 
 ## Contributing
 
