@@ -50,6 +50,8 @@ If you want to use mysql, you also need *mysql-client*:
 $ apt install mysql-client
 ```
 
+Then rename the `config.example.yaml` in the `conf` directory to `config.yaml` and update your [MySQL connection information](#Database).
+
 You can run the whole thing with nginx and fcgiwrap, or whichever other flavors you prefer.
 
 [Read more about setting up Bash-end](docs/setup.md)
